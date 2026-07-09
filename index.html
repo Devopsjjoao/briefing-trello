@@ -7,6 +7,7 @@
     --signal:#2a6f5e;
     --signal-dark:#1d5044;
     --amber:#e0a53c;
+    --playbet:#3b5bdb;
     --muted:#6b7280;
     --danger:#b5432f;
     --font-display: 'Fraunces', Georgia, serif;
@@ -113,19 +114,39 @@
   .briefing-app .briefing-block{
     border-top:1px dashed var(--line);
     padding-top:16px;margin-top:16px;
+    border-left:3px solid var(--line);
+    padding-left:14px;
+    margin-left:-14px;
+    transition:border-color .2s;
   }
   .briefing-app .briefing-block:first-child{border-top:none;padding-top:0;margin-top:0;}
+  .briefing-app .briefing-block.identity-mcgames{border-left-color:var(--signal-dark);}
+  .briefing-app .briefing-block.identity-playbet{border-left-color:var(--playbet);}
   .briefing-app .block-header{
     display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;
+    cursor:pointer;user-select:none;
   }
+  .briefing-app .block-header-left{display:flex;align-items:center;gap:8px;min-width:0;}
+  .briefing-app .block-chevron{
+    font-size:11px;color:var(--muted);transition:transform .15s;flex-shrink:0;
+  }
+  .briefing-app .briefing-block.collapsed .block-chevron{transform:rotate(-90deg);}
   .briefing-app .block-title{
-    font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--signal-dark);
+    font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--signal-dark);flex-shrink:0;
   }
+  .briefing-app .block-summary{
+    font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .briefing-app .block-body{display:block;}
+  .briefing-app .briefing-block.collapsed .block-body{display:none;}
   .briefing-app .remove-block-x{
     background:none;border:none;color:var(--danger);font-size:12px;cursor:pointer;font-weight:700;
-    padding:4px 6px;
+    padding:4px 6px;flex-shrink:0;
   }
   .briefing-app #btnAddBlock{margin-top:10px;width:100%;}
+  .briefing-app .item-row .chip img{
+    width:28px;height:28px;object-fit:cover;border-radius:5px;flex-shrink:0;
+  }
 </style>
 
 <div class="briefing-app">
@@ -302,12 +323,17 @@
 
   function blockTemplate(num){
     return `
-      <div class="briefing-block">
+      <div class="briefing-block identity-mcgames">
         <div class="block-header">
-          <span class="block-title">Card ${num}</span>
+          <div class="block-header-left">
+            <span class="block-chevron">▾</span>
+            <span class="block-title">Card ${num}</span>
+            <span class="block-summary"></span>
+          </div>
           <button type="button" class="remove-block-x">✕ remover este card</button>
         </div>
 
+        <div class="block-body">
         <label>Título do card</label>
         <input type="text" data-f="titulo" placeholder="ex: Post feed — Lançamento julho">
 
@@ -359,6 +385,7 @@
         <div class="fileList"></div>
         <button class="btn btn-ghost btn-add-file" type="button">+ Adicionar imagem</button>
         <input type="file" class="file-input-hidden" accept="image/*" multiple style="display:none">
+        </div>
       </div>
     `;
   }
@@ -420,11 +447,13 @@
       blockData.refFiles.forEach((file, idx) => {
         const div = document.createElement('div');
         div.className = 'item-row';
+        const previewUrl = URL.createObjectURL(file);
         div.innerHTML = `
-          <div class="chip"><span class="icon">🖼</span><span>${file.name}</span></div>
+          <div class="chip"><img src="${previewUrl}" alt=""><span>${file.name}</span></div>
           <button type="button" class="remove-x" title="Remover">✕</button>
         `;
         div.querySelector('.remove-x').addEventListener('click', () => {
+          URL.revokeObjectURL(previewUrl);
           blockData.refFiles.splice(idx, 1);
           renderFiles();
         });
@@ -439,6 +468,32 @@
       this.value = '';
       renderFiles();
     });
+
+    // cor da barra lateral conforme a Identidade escolhida
+    const selIdentidade = el.querySelector('[data-f="identidade"]');
+    function updateIdentityColor(){
+      el.classList.remove('identity-mcgames', 'identity-playbet');
+      el.classList.add(selIdentidade.value === 'PlayBet' ? 'identity-playbet' : 'identity-mcgames');
+    }
+    selIdentidade.addEventListener('change', updateIdentityColor);
+    updateIdentityColor();
+
+    // resumo mostrado quando o card está colapsado
+    const summaryEl = el.querySelector('.block-summary');
+    function updateSummary(){
+      const parts = [getField(el, 'peca'), getField(el, 'demandante')].filter(Boolean);
+      summaryEl.textContent = parts.length ? '— ' + parts.join(', ') : '';
+    }
+    el.querySelectorAll('input, textarea, select').forEach(inp => {
+      inp.addEventListener('input', updateSummary);
+      inp.addEventListener('change', updateSummary);
+    });
+
+    // colapsar/expandir ao clicar no cabeçalho (menos no botão de remover)
+    el.querySelector('.block-header').addEventListener('click', (e) => {
+      if(e.target.closest('.remove-block-x')) return;
+      el.classList.toggle('collapsed');
+    });
     el.querySelector('.remove-block-x').addEventListener('click', () => {
       if(blocks.length <= 1) return; // sempre mantém pelo menos 1 card
       blocks = blocks.filter(b => b.uid !== blockData.uid);
@@ -448,6 +503,10 @@
     });
 
     addLinkRow(); // começa com uma linha de link em branco
+
+    // colapsa os cards anteriores automaticamente, mantendo só o novo aberto
+    blocks.slice(0, -1).forEach(b => b.el.classList.add('collapsed'));
+
     updateCreateButtonLabel();
   }
 
