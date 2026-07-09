@@ -1,0 +1,504 @@
+<style>
+  :root{
+    --ink:#14181c;
+    --paper:#f6f5f2;
+    --panel:#ffffff;
+    --line:#dfdecf;
+    --signal:#2a6f5e;
+    --signal-dark:#1d5044;
+    --amber:#e0a53c;
+    --muted:#6b7280;
+    --danger:#b5432f;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  .briefing-app{
+    font-family:var(--font-body);
+    background:var(--paper);
+    color:var(--ink);
+    padding:28px 20px 60px;
+    min-height:100%;
+  }
+  .briefing-app .wrap{max-width:640px;margin:0 auto;}
+  .briefing-app .eyebrow{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--signal-dark);font-weight:700;margin-bottom:6px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .briefing-app .eyebrow::before{
+    content:"";width:7px;height:7px;border-radius:50%;background:var(--signal);display:inline-block;
+  }
+  .briefing-app h1{
+    font-family:var(--font-display);
+    font-size:32px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em;
+  }
+  .briefing-app .sub{color:var(--muted);font-size:14px;margin-bottom:26px;}
+
+  .briefing-app .panel{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;margin-bottom:16px;
+  }
+  .briefing-app .panel h2{
+    font-family:var(--font-display);font-size:15px;font-weight:600;margin:0 0 14px;
+    display:flex;align-items:center;gap:8px;color:var(--signal-dark);
+  }
+  .briefing-app .panel h2 .num{
+    width:20px;height:20px;border-radius:50%;background:var(--signal-dark);color:#fff;
+    font-size:11px;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-weight:700;
+  }
+  .briefing-app label{
+    display:block;font-size:12px;font-weight:600;color:var(--ink);margin:12px 0 5px;
+  }
+  .briefing-app label:first-of-type{margin-top:0;}
+  .briefing-app input[type=text],
+  .briefing-app input[type=password],
+  .briefing-app input[type=date],
+  .briefing-app select,
+  .briefing-app textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;
+    font-family:var(--font-body);font-size:13.5px;background:#fcfcfa;color:var(--ink);
+    outline:none;transition:border-color .15s;
+  }
+  .briefing-app input:focus,.briefing-app select:focus,.briefing-app textarea:focus{
+    border-color:var(--signal);background:#fff;
+  }
+  .briefing-app textarea{resize:vertical;min-height:60px;}
+  .briefing-app .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .briefing-app .hint{font-size:11.5px;color:var(--muted);margin-top:6px;}
+  .briefing-app .hint a{color:var(--signal-dark);}
+
+  .briefing-app .remember{
+    display:flex;align-items:center;gap:7px;margin-top:14px;font-size:12px;color:var(--muted);
+  }
+  .briefing-app .remember input{width:auto;}
+
+  .briefing-app .btn{
+    appearance:none;border:none;cursor:pointer;font-family:var(--font-body);font-weight:700;
+    font-size:13.5px;border-radius:9px;padding:11px 18px;transition:transform .1s, background .15s;
+  }
+  .briefing-app .btn:active{transform:scale(.98);}
+  .briefing-app .btn-primary{background:var(--signal-dark);color:#fff;width:100%;font-size:14.5px;padding:13px;margin-top:6px;}
+  .briefing-app .btn-primary:hover{background:var(--signal);}
+  .briefing-app .btn-primary:disabled{background:#b9c4bf;cursor:not-allowed;}
+  .briefing-app .btn-ghost{background:transparent;color:var(--signal-dark);border:1px solid var(--line);padding:8px 12px;font-size:12.5px;}
+  .briefing-app .btn-ghost:hover{border-color:var(--signal);}
+
+  .briefing-app .status{
+    margin-top:14px;padding:12px 14px;border-radius:9px;font-size:13px;display:none;
+  }
+  .briefing-app .status.show{display:block;}
+  .briefing-app .status.ok{background:#e7f2ed;color:var(--signal-dark);border:1px solid #bcd9cd;}
+  .briefing-app .status.err{background:#fbeae6;color:var(--danger);border:1px solid #f0c4b9;}
+  .briefing-app .status a{color:inherit;font-weight:700;}
+
+  .briefing-app .locked{opacity:.45;pointer-events:none;}
+  .briefing-app .divider{height:1px;background:var(--line);margin:16px 0;}
+  .briefing-app .badge{
+    font-size:10.5px;background:#eef2ee;color:var(--signal-dark);padding:2px 8px;border-radius:20px;font-weight:700;letter-spacing:.02em;
+  }
+  .briefing-app .item-row{
+    display:flex;align-items:center;gap:8px;margin-bottom:8px;
+  }
+  .briefing-app .item-row input[type=text]{flex:1;}
+  .briefing-app .item-row .chip{
+    flex:1;display:flex;align-items:center;gap:8px;background:#fcfcfa;border:1px solid var(--line);
+    border-radius:8px;padding:8px 11px;font-size:13px;color:var(--ink);
+  }
+  .briefing-app .item-row .chip .icon{color:var(--signal-dark);}
+  .briefing-app .remove-x{
+    background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px;line-height:1;
+    padding:4px 6px;flex-shrink:0;
+  }
+</style>
+
+<div class="briefing-app">
+  <div class="wrap">
+    <div class="eyebrow">Gestão de projeto</div>
+    <h1>Briefing → Trello</h1>
+    <div class="sub">Preencha o briefing uma vez. O card nasce pronto no board.</div>
+
+    <!-- CONEXÃO -->
+    <div class="panel" id="panel-conn">
+      <h2><span class="num">1</span>Conectar ao Trello</h2>
+      <div class="row2">
+        <div>
+          <label for="tKey">API Key</label>
+          <input type="text" id="tKey" placeholder="sua API key" autocomplete="off">
+        </div>
+        <div>
+          <label for="tToken">Token</label>
+          <input type="password" id="tToken" placeholder="seu token" autocomplete="off">
+        </div>
+      </div>
+      <div class="hint">Não tem? Gere em <a href="https://trello.com/power-ups/admin" target="_blank">trello.com/power-ups/admin</a> (criar Power-Up → gerar API Key → gerar Token).</div>
+      <div class="remember">
+        <input type="checkbox" id="remember" checked>
+        <label style="margin:0;font-weight:400;" for="remember">Lembrar neste navegador (salvo só para você, ninguém mais vê)</label>
+      </div>
+      <button class="btn btn-ghost" id="btnConnect" style="margin-top:12px;">Conectar</button>
+      <span id="connBadge" class="badge" style="display:none;margin-left:8px;">conectado</span>
+      <div class="status" id="connStatus"></div>
+    </div>
+
+    <!-- DESTINO -->
+    <div class="panel locked" id="panel-dest">
+      <h2><span class="num">2</span>Onde criar o card</h2>
+      <div class="row2">
+        <div>
+          <label for="selBoard">Board</label>
+          <select id="selBoard"><option>Conecte-se primeiro</option></select>
+        </div>
+        <div>
+          <label for="selList">Lista</label>
+          <select id="selList"><option>—</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRIEFING -->
+    <div class="panel locked" id="panel-form">
+      <h2><span class="num">3</span>Preencher o briefing</h2>
+
+      <label for="fTitulo">Título do card</label>
+      <input type="text" id="fTitulo" placeholder="ex: Post feed — Lançamento julho">
+
+      <div class="row2">
+        <div>
+          <label for="fDemandante">Demandante</label>
+          <input type="text" id="fDemandante" placeholder="quem pediu">
+        </div>
+        <div>
+          <label for="fIdentidade">Identidade</label>
+          <select id="fIdentidade">
+            <option value="MC Games">MC Games</option>
+            <option value="PlayBet">PlayBet</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label for="fDataSolic">Data da solicitação</label>
+          <input type="date" id="fDataSolic">
+        </div>
+        <div>
+          <label for="fDataSalvar">Data para salvar (prazo)</label>
+          <input type="date" id="fDataSalvar">
+        </div>
+      </div>
+
+      <label for="fOnde">Onde será veiculada?</label>
+      <input type="text" id="fOnde" placeholder="ex: Instagram feed, Stories, site...">
+
+      <label for="fPeca">Qual peça?</label>
+      <input type="text" id="fPeca" placeholder="ex: carrossel, banner, vídeo curto...">
+
+      <label for="fCopyPrincipal">Copy principal</label>
+      <textarea id="fCopyPrincipal" placeholder="texto principal da peça"></textarea>
+
+      <label for="fCopySecundaria">Copy secundária</label>
+      <textarea id="fCopySecundaria" placeholder="texto de apoio, CTA, legenda..."></textarea>
+
+      <label for="fDescricao">Descrição da peça</label>
+      <textarea id="fDescricao" placeholder="direção de arte, formato, referências visuais..."></textarea>
+
+      <label>Referência (links do Drive, imagens na web etc.)</label>
+      <div id="linkList"></div>
+      <button class="btn btn-ghost" id="btnAddLink" type="button">+ Adicionar link</button>
+
+      <label style="margin-top:18px;">Referência (subir PNG/JPG do computador)</label>
+      <div id="fileList"></div>
+      <button class="btn btn-ghost" id="btnAddFile" type="button">+ Adicionar imagem</button>
+      <input type="file" id="fReferenciaArquivo" accept="image/*" multiple style="display:none">
+
+      <button class="btn btn-primary" id="btnCreate" disabled>Criar card no Trello</button>
+      <div class="status" id="status"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY = 'trello-briefing-creds';
+
+  const connBadge = $('connBadge');
+  const panelDest = $('panel-dest');
+  const panelForm = $('panel-form');
+  const btnCreate = $('btnCreate');
+  const statusBox = $('status');
+
+  function showStatus(msg, ok){
+    statusBox.className = 'status show ' + (ok ? 'ok' : 'err');
+    statusBox.innerHTML = msg;
+  }
+
+  function showConnStatus(msg, ok){
+    const box = $('connStatus');
+    box.className = 'status show ' + (ok ? 'ok' : 'err');
+    box.innerHTML = msg;
+  }
+
+  async function loadSaved(){
+    try{
+      const r = await window.storage.get(STORAGE_KEY, false);
+      if(r && r.value){
+        const c = JSON.parse(r.value);
+        $('tKey').value = c.key || '';
+        $('tToken').value = c.token || '';
+      }
+    }catch(e){ /* nothing saved yet */ }
+  }
+
+  async function saveCreds(key, token){
+    try{
+      await window.storage.set(STORAGE_KEY, JSON.stringify({key, token}), false);
+    }catch(e){ console.error('Falha ao salvar credenciais', e); }
+  }
+
+  async function trelloGet(path, key, token){
+    const url = `https://api.trello.com/1/${path}${path.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}&token=${encodeURIComponent(token)}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Trello respondeu ' + res.status);
+    return res.json();
+  }
+
+  let currentMemberId = null;
+  let currentMemberName = '';
+
+  async function connect(){
+    const key = $('tKey').value.trim();
+    const token = $('tToken').value.trim();
+    if(!key || !token){
+      showConnStatus('Preencha API Key e Token antes de conectar.', false);
+      return;
+    }
+    $('btnConnect').textContent = 'Conectando...';
+    showConnStatus('Conectando ao Trello...', true);
+    try{
+      const boards = await trelloGet('members/me/boards?fields=name', key, token);
+      const me = await trelloGet('members/me?fields=id,fullName,username', key, token);
+      currentMemberId = me.id;
+      currentMemberName = me.fullName || me.username || 'você';
+      const selBoard = $('selBoard');
+      selBoard.innerHTML = '';
+      boards.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id; opt.textContent = b.name;
+        selBoard.appendChild(opt);
+      });
+      panelDest.classList.remove('locked');
+      panelForm.classList.remove('locked');
+      btnCreate.disabled = false;
+      connBadge.style.display = 'inline-block';
+      $('btnConnect').textContent = 'Reconectar';
+      showConnStatus(`Conectado como ${currentMemberName}. ${boards.length} board(s) encontrado(s).`, true);
+
+      if($('remember').checked) saveCreds(key, token);
+
+      if(boards.length) await loadLists(boards[0].id, key, token);
+      selBoard.addEventListener('change', () => loadLists(selBoard.value, key, token));
+    }catch(e){
+      showConnStatus('Não consegui conectar. Detalhe técnico: ' + (e && e.message ? e.message : 'erro desconhecido') +
+        '. Confira se a API Key e o Token estão corretos, se o token não expirou, e se sua rede/navegador não está bloqueando o pedido (veja o Console do navegador, F12, por mais detalhes).', false);
+      $('btnConnect').textContent = 'Conectar';
+    }
+  }
+
+  async function loadLists(boardId, key, token){
+    const selList = $('selList');
+    selList.innerHTML = '<option>Carregando...</option>';
+    try{
+      const lists = await trelloGet(`boards/${boardId}/lists?fields=name`, key, token);
+      selList.innerHTML = '';
+      lists.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.id; opt.textContent = l.name;
+        selList.appendChild(opt);
+      });
+    }catch(e){
+      selList.innerHTML = '<option>Erro ao carregar listas</option>';
+    }
+  }
+
+  function buildDescription(){
+    const links = getLinkValues();
+    let refValue;
+    if(links.length && refFiles.length){
+      refValue = links.join(', ') + ' — + ' + refFiles.length + ' imagem(ns) anexada(s) no card';
+    } else if(links.length){
+      refValue = links.join(', ');
+    } else if(refFiles.length){
+      refValue = refFiles.length + ' imagem(ns) anexada(s) no card (ver anexos)';
+    } else {
+      refValue = '';
+    }
+    const rows = [
+      ['Demandante', $('fDemandante').value],
+      ['Data da solicitação', $('fDataSolic').value],
+      ['Data para salvar', $('fDataSalvar').value],
+      ['Onde será veiculada?', $('fOnde').value],
+      ['Qual peça?', $('fPeca').value],
+      ['Copy principal', $('fCopyPrincipal').value],
+      ['Copy secundária', $('fCopySecundaria').value],
+      ['Descrição da peça', $('fDescricao').value],
+      ['Identidade', $('fIdentidade').value],
+      ['Referência', refValue],
+    ];
+    return rows.map(([label, val]) => `**${label}:** ${val || '—'}`).join('\n\n');
+  }
+
+  async function attachToCard(cardId, key, token){
+    const links = getLinkValues();
+    const errors = [];
+
+    for(const link of links){
+      try{
+        const p = new URLSearchParams({ key, token, url: link });
+        const r = await fetch(`https://api.trello.com/1/cards/${cardId}/attachments?${p.toString()}`, { method: 'POST' });
+        if(!r.ok) throw new Error('status ' + r.status);
+      }catch(e){
+        errors.push(`link "${link}"`);
+      }
+    }
+
+    for(const file of refFiles){
+      try{
+        const fd = new FormData();
+        fd.append('key', key);
+        fd.append('token', token);
+        fd.append('file', file);
+        const r = await fetch(`https://api.trello.com/1/cards/${cardId}/attachments`, { method: 'POST', body: fd });
+        if(!r.ok) throw new Error('status ' + r.status);
+      }catch(e){
+        errors.push(`arquivo "${file.name}"`);
+      }
+    }
+
+    if(errors.length) throw new Error('falhou: ' + errors.join(', '));
+  }
+
+  async function createCard(){
+    const key = $('tKey').value.trim();
+    const token = $('tToken').value.trim();
+    const listId = $('selList').value;
+    if(!listId){
+      showStatus('Escolha uma lista de destino primeiro.', false);
+      return;
+    }
+    let title = $('fTitulo').value.trim();
+    if(!title){
+      title = [$('fPeca').value, $('fDemandante').value].filter(Boolean).join(' — ') || 'Novo briefing';
+    }
+
+    btnCreate.disabled = true;
+    btnCreate.textContent = 'Criando...';
+
+    const params = new URLSearchParams({
+      key, token,
+      idList: listId,
+      name: title,
+      desc: buildDescription()
+    });
+    if($('fDataSalvar').value) params.set('due', new Date($('fDataSalvar').value).toISOString());
+    if(currentMemberId) params.set('idMembers', currentMemberId);
+
+    try{
+      const res = await fetch(`https://api.trello.com/1/cards?${params.toString()}`, { method: 'POST' });
+      if(!res.ok) throw new Error('Trello respondeu ' + res.status);
+      const card = await res.json();
+
+      let attachWarning = '';
+      try{
+        await attachToCard(card.id, key, token);
+      }catch(attachErr){
+        attachWarning = ' (card criado, mas a referência não subiu: ' + attachErr.message + ')';
+      }
+
+      showStatus(`Card criado com sucesso${attachWarning}. <a href="${card.shortUrl}" target="_blank">Abrir no Trello →</a>`, !attachWarning);
+      ['fTitulo','fDemandante','fOnde','fPeca','fCopyPrincipal','fCopySecundaria','fDescricao','fDataSolic','fDataSalvar']
+        .forEach(id => $(id).value = '');
+      linkRows = [];
+      addLinkRow();
+      refFiles = [];
+      renderFiles();
+    }catch(e){
+      showStatus('Não consegui criar o card. Verifique a conexão e tente de novo.', false);
+    }finally{
+      btnCreate.disabled = false;
+      btnCreate.textContent = 'Criar card no Trello';
+    }
+  }
+
+  // ---- Referências: links múltiplos ----
+  let linkIdCounter = 0;
+  let linkRows = []; // {id, value}
+
+  function addLinkRow(initial){
+    const id = 'link_' + (linkIdCounter++);
+    linkRows.push({ id, value: initial || '' });
+    renderLinks();
+  }
+
+  function renderLinks(){
+    const box = $('linkList');
+    box.innerHTML = '';
+    linkRows.forEach(row => {
+      const div = document.createElement('div');
+      div.className = 'item-row';
+      div.innerHTML = `
+        <input type="text" placeholder="cole aqui o link" value="${row.value.replace(/"/g,'&quot;')}">
+        <button type="button" class="remove-x" title="Remover">✕</button>
+      `;
+      const input = div.querySelector('input');
+      input.addEventListener('input', () => { row.value = input.value; });
+      div.querySelector('.remove-x').addEventListener('click', () => {
+        linkRows = linkRows.filter(r => r.id !== row.id);
+        renderLinks();
+      });
+      box.appendChild(div);
+    });
+  }
+
+  function getLinkValues(){
+    return linkRows.map(r => r.value.trim()).filter(Boolean);
+  }
+
+  // ---- Referências: arquivos múltiplos ----
+  let refFiles = []; // File objects
+
+  function renderFiles(){
+    const box = $('fileList');
+    box.innerHTML = '';
+    refFiles.forEach((file, idx) => {
+      const div = document.createElement('div');
+      div.className = 'item-row';
+      div.innerHTML = `
+        <div class="chip"><span class="icon">🖼</span><span>${file.name}</span></div>
+        <button type="button" class="remove-x" title="Remover">✕</button>
+      `;
+      div.querySelector('.remove-x').addEventListener('click', () => {
+        refFiles.splice(idx, 1);
+        renderFiles();
+      });
+      box.appendChild(div);
+    });
+  }
+
+  $('btnAddLink').addEventListener('click', () => addLinkRow());
+  $('btnAddFile').addEventListener('click', () => $('fReferenciaArquivo').click());
+  $('fReferenciaArquivo').addEventListener('change', function(){
+    Array.from(this.files).forEach(f => refFiles.push(f));
+    this.value = ''; // permite escolher os mesmos arquivos de novo depois, se precisar
+    renderFiles();
+  });
+
+  addLinkRow(); // começa com uma linha de link em branco
+
+  $('btnConnect').addEventListener('click', connect);
+  btnCreate.addEventListener('click', createCard);
+  loadSaved();
+})();
+</script>
