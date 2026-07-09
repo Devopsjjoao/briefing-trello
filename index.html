@@ -110,13 +110,29 @@
     background:none;border:none;cursor:pointer;color:var(--danger);font-size:16px;line-height:1;
     padding:4px 6px;flex-shrink:0;
   }
+  .briefing-app .briefing-block{
+    border-top:1px dashed var(--line);
+    padding-top:16px;margin-top:16px;
+  }
+  .briefing-app .briefing-block:first-child{border-top:none;padding-top:0;margin-top:0;}
+  .briefing-app .block-header{
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;
+  }
+  .briefing-app .block-title{
+    font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--signal-dark);
+  }
+  .briefing-app .remove-block-x{
+    background:none;border:none;color:var(--danger);font-size:12px;cursor:pointer;font-weight:700;
+    padding:4px 6px;
+  }
+  .briefing-app #btnAddBlock{margin-top:10px;width:100%;}
 </style>
 
 <div class="briefing-app">
   <div class="wrap">
     <div class="eyebrow">Gestão de projeto</div>
     <h1>Briefing → Trello</h1>
-    <div class="sub">Preencha o briefing uma vez. O card nasce pronto no board.</div>
+    <div class="sub">Preencha um ou mais briefings e crie todos os cards de uma vez.</div>
 
     <!-- CONEXÃO -->
     <div class="panel" id="panel-conn">
@@ -143,7 +159,7 @@
 
     <!-- DESTINO -->
     <div class="panel locked" id="panel-dest">
-      <h2><span class="num">2</span>Onde criar o card</h2>
+      <h2><span class="num">2</span>Onde criar os cards</h2>
       <div class="row2">
         <div>
           <label for="selBoard">Board</label>
@@ -154,63 +170,18 @@
           <select id="selList"><option>—</option></select>
         </div>
       </div>
+      <div class="hint">Todos os cards criados de uma vez vão para essa mesma lista.</div>
     </div>
 
-    <!-- BRIEFING -->
+    <!-- BRIEFINGS -->
     <div class="panel locked" id="panel-form">
-      <h2><span class="num">3</span>Preencher o briefing</h2>
+      <h2><span class="num">3</span>Preencher os briefings</h2>
 
-      <label for="fTitulo">Título do card</label>
-      <input type="text" id="fTitulo" placeholder="ex: Post feed — Lançamento julho">
+      <div id="blocksContainer"></div>
 
-      <div class="row2">
-        <div>
-          <label for="fDemandante">Demandante</label>
-          <input type="text" id="fDemandante" placeholder="quem pediu">
-        </div>
-        <div>
-          <label for="fIdentidade">Identidade</label>
-          <select id="fIdentidade">
-            <option value="MC Games">MC Games</option>
-            <option value="PlayBet">PlayBet</option>
-          </select>
-        </div>
-      </div>
+      <button class="btn btn-ghost" id="btnAddBlock" type="button">+ Adicionar outro card</button>
 
-      <div class="row2">
-        <div>
-          <label for="fDataSolic">Data da solicitação</label>
-          <input type="date" id="fDataSolic">
-        </div>
-        <div>
-          <label for="fDataSalvar">Data para salvar (prazo)</label>
-          <input type="date" id="fDataSalvar">
-        </div>
-      </div>
-
-      <label for="fOnde">Onde será veiculada?</label>
-      <input type="text" id="fOnde" placeholder="ex: Instagram feed, Stories, site...">
-
-      <label for="fPeca">Qual peça?</label>
-      <input type="text" id="fPeca" placeholder="ex: carrossel, banner, vídeo curto...">
-
-      <label for="fCopyPrincipal">Copy principal</label>
-      <textarea id="fCopyPrincipal" placeholder="texto principal da peça"></textarea>
-
-      <label for="fCopySecundaria">Copy secundária</label>
-      <textarea id="fCopySecundaria" placeholder="texto de apoio, CTA, legenda..."></textarea>
-
-      <label for="fDescricao">Descrição da peça</label>
-      <textarea id="fDescricao" placeholder="direção de arte, formato, referências visuais..."></textarea>
-
-      <label>Referência (links do Drive, imagens na web etc.)</label>
-      <div id="linkList"></div>
-      <button class="btn btn-ghost" id="btnAddLink" type="button">+ Adicionar link</button>
-
-      <label style="margin-top:18px;">Referência (subir PNG/JPG do computador)</label>
-      <div id="fileList"></div>
-      <button class="btn btn-ghost" id="btnAddFile" type="button">+ Adicionar imagem</button>
-      <input type="file" id="fReferenciaArquivo" accept="image/*" multiple style="display:none">
+      <div class="divider"></div>
 
       <button class="btn btn-primary" id="btnCreate" disabled>Criar card no Trello</button>
       <div class="status" id="status"></div>
@@ -323,35 +294,194 @@
     }
   }
 
-  function buildDescription(){
-    const links = getLinkValues();
+  // =========================================================
+  // BLOCOS DE BRIEFING (permite criar vários cards de uma vez)
+  // =========================================================
+  let blocks = []; // { uid, el, linkRows:[{id,value}], refFiles:[File] }
+  let blockCounter = 0;
+
+  function blockTemplate(num){
+    return `
+      <div class="briefing-block">
+        <div class="block-header">
+          <span class="block-title">Card ${num}</span>
+          <button type="button" class="remove-block-x">✕ remover este card</button>
+        </div>
+
+        <label>Título do card</label>
+        <input type="text" data-f="titulo" placeholder="ex: Post feed — Lançamento julho">
+
+        <div class="row2">
+          <div>
+            <label>Demandante</label>
+            <input type="text" data-f="demandante" placeholder="quem pediu">
+          </div>
+          <div>
+            <label>Identidade</label>
+            <select data-f="identidade">
+              <option value="MC Games">MC Games</option>
+              <option value="PlayBet">PlayBet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Data da solicitação</label>
+            <input type="date" data-f="dataSolic">
+          </div>
+          <div>
+            <label>Data para salvar (prazo)</label>
+            <input type="date" data-f="dataSalvar">
+          </div>
+        </div>
+
+        <label>Onde será veiculada?</label>
+        <input type="text" data-f="onde" placeholder="ex: Instagram feed, Stories, site...">
+
+        <label>Qual peça?</label>
+        <input type="text" data-f="peca" placeholder="ex: carrossel, banner, vídeo curto...">
+
+        <label>Copy principal</label>
+        <textarea data-f="copyPrincipal" placeholder="texto principal da peça"></textarea>
+
+        <label>Copy secundária</label>
+        <textarea data-f="copySecundaria" placeholder="texto de apoio, CTA, legenda..."></textarea>
+
+        <label>Descrição da peça</label>
+        <textarea data-f="descricao" placeholder="direção de arte, formato, referências visuais..."></textarea>
+
+        <label>Referência (links do Drive, imagens na web etc.)</label>
+        <div class="linkList"></div>
+        <button class="btn btn-ghost btn-add-link" type="button">+ Adicionar link</button>
+
+        <label style="margin-top:18px;">Referência (subir PNG/JPG do computador)</label>
+        <div class="fileList"></div>
+        <button class="btn btn-ghost btn-add-file" type="button">+ Adicionar imagem</button>
+        <input type="file" class="file-input-hidden" accept="image/*" multiple style="display:none">
+      </div>
+    `;
+  }
+
+  function getField(el, name){
+    const node = el.querySelector(`[data-f="${name}"]`);
+    return node ? node.value : '';
+  }
+
+  function updateCreateButtonLabel(){
+    btnCreate.textContent = blocks.length > 1 ? `Criar ${blocks.length} cards no Trello` : 'Criar card no Trello';
+  }
+
+  function renumberBlocks(){
+    blocks.forEach((b, i) => {
+      b.el.querySelector('.block-title').textContent = 'Card ' + (i + 1);
+    });
+  }
+
+  function addBlock(){
+    blockCounter++;
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = blockTemplate(blocks.length + 1);
+    const el = wrapper.firstElementChild;
+    $('blocksContainer').appendChild(el);
+
+    const blockData = { uid: 'b' + blockCounter, el, linkRows: [], refFiles: [] };
+    blocks.push(blockData);
+
+    let linkIdCounter = 0;
+
+    function renderLinks(){
+      const box = el.querySelector('.linkList');
+      box.innerHTML = '';
+      blockData.linkRows.forEach(row => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+          <input type="text" placeholder="cole aqui o link" value="${row.value.replace(/"/g,'&quot;')}">
+          <button type="button" class="remove-x" title="Remover">✕</button>
+        `;
+        div.querySelector('input').addEventListener('input', e => { row.value = e.target.value; });
+        div.querySelector('.remove-x').addEventListener('click', () => {
+          blockData.linkRows = blockData.linkRows.filter(r => r.id !== row.id);
+          renderLinks();
+        });
+        box.appendChild(div);
+      });
+    }
+
+    function addLinkRow(){
+      blockData.linkRows.push({ id: 'l' + (linkIdCounter++), value: '' });
+      renderLinks();
+    }
+
+    function renderFiles(){
+      const box = el.querySelector('.fileList');
+      box.innerHTML = '';
+      blockData.refFiles.forEach((file, idx) => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+          <div class="chip"><span class="icon">🖼</span><span>${file.name}</span></div>
+          <button type="button" class="remove-x" title="Remover">✕</button>
+        `;
+        div.querySelector('.remove-x').addEventListener('click', () => {
+          blockData.refFiles.splice(idx, 1);
+          renderFiles();
+        });
+        box.appendChild(div);
+      });
+    }
+
+    el.querySelector('.btn-add-link').addEventListener('click', addLinkRow);
+    el.querySelector('.btn-add-file').addEventListener('click', () => el.querySelector('.file-input-hidden').click());
+    el.querySelector('.file-input-hidden').addEventListener('change', function(){
+      Array.from(this.files).forEach(f => blockData.refFiles.push(f));
+      this.value = '';
+      renderFiles();
+    });
+    el.querySelector('.remove-block-x').addEventListener('click', () => {
+      if(blocks.length <= 1) return; // sempre mantém pelo menos 1 card
+      blocks = blocks.filter(b => b.uid !== blockData.uid);
+      el.remove();
+      renumberBlocks();
+      updateCreateButtonLabel();
+    });
+
+    addLinkRow(); // começa com uma linha de link em branco
+    updateCreateButtonLabel();
+  }
+
+  function buildDescriptionFor(blockData){
+    const links = blockData.linkRows.map(r => r.value.trim()).filter(Boolean);
+    const files = blockData.refFiles;
     let refValue;
-    if(links.length && refFiles.length){
-      refValue = links.join(', ') + ' — + ' + refFiles.length + ' imagem(ns) anexada(s) no card';
+    if(links.length && files.length){
+      refValue = links.join(', ') + ' — + ' + files.length + ' imagem(ns) anexada(s) no card';
     } else if(links.length){
       refValue = links.join(', ');
-    } else if(refFiles.length){
-      refValue = refFiles.length + ' imagem(ns) anexada(s) no card (ver anexos)';
+    } else if(files.length){
+      refValue = files.length + ' imagem(ns) anexada(s) no card (ver anexos)';
     } else {
       refValue = '';
     }
+    const el = blockData.el;
     const rows = [
-      ['Demandante', $('fDemandante').value],
-      ['Data da solicitação', $('fDataSolic').value],
-      ['Data para salvar', $('fDataSalvar').value],
-      ['Onde será veiculada?', $('fOnde').value],
-      ['Qual peça?', $('fPeca').value],
-      ['Copy principal', $('fCopyPrincipal').value],
-      ['Copy secundária', $('fCopySecundaria').value],
-      ['Descrição da peça', $('fDescricao').value],
-      ['Identidade', $('fIdentidade').value],
+      ['Demandante', getField(el, 'demandante')],
+      ['Data da solicitação', getField(el, 'dataSolic')],
+      ['Data para salvar', getField(el, 'dataSalvar')],
+      ['Onde será veiculada?', getField(el, 'onde')],
+      ['Qual peça?', getField(el, 'peca')],
+      ['Copy principal', getField(el, 'copyPrincipal')],
+      ['Copy secundária', getField(el, 'copySecundaria')],
+      ['Descrição da peça', getField(el, 'descricao')],
+      ['Identidade', getField(el, 'identidade')],
       ['Referência', refValue],
     ];
     return rows.map(([label, val]) => `**${label}:** ${val || '—'}`).join('\n\n');
   }
 
-  async function attachToCard(cardId, key, token){
-    const links = getLinkValues();
+  async function attachToCard(cardId, key, token, blockData){
+    const links = blockData.linkRows.map(r => r.value.trim()).filter(Boolean);
     const errors = [];
 
     for(const link of links){
@@ -364,7 +494,7 @@
       }
     }
 
-    for(const file of refFiles){
+    for(const file of blockData.refFiles){
       try{
         const fd = new FormData();
         fd.append('key', key);
@@ -380,29 +510,21 @@
     if(errors.length) throw new Error('falhou: ' + errors.join(', '));
   }
 
-  async function createCard(){
-    const key = $('tKey').value.trim();
-    const token = $('tToken').value.trim();
-    const listId = $('selList').value;
-    if(!listId){
-      showStatus('Escolha uma lista de destino primeiro.', false);
-      return;
-    }
-    let title = $('fTitulo').value.trim();
+  async function createSingleCard(blockData, key, token, listId){
+    const el = blockData.el;
+    let title = getField(el, 'titulo').trim();
     if(!title){
-      title = [$('fPeca').value, $('fDemandante').value].filter(Boolean).join(' — ') || 'Novo briefing';
+      title = [getField(el, 'peca'), getField(el, 'demandante')].filter(Boolean).join(' — ') || 'Novo briefing';
     }
-
-    btnCreate.disabled = true;
-    btnCreate.textContent = 'Criando...';
 
     const params = new URLSearchParams({
       key, token,
       idList: listId,
       name: title,
-      desc: buildDescription()
+      desc: buildDescriptionFor(blockData)
     });
-    if($('fDataSalvar').value) params.set('due', new Date($('fDataSalvar').value).toISOString());
+    const dataSalvar = getField(el, 'dataSalvar');
+    if(dataSalvar) params.set('due', new Date(dataSalvar).toISOString());
     if(currentMemberId) params.set('idMembers', currentMemberId);
 
     try{
@@ -412,93 +534,58 @@
 
       let attachWarning = '';
       try{
-        await attachToCard(card.id, key, token);
+        await attachToCard(card.id, key, token, blockData);
       }catch(attachErr){
-        attachWarning = ' (card criado, mas a referência não subiu: ' + attachErr.message + ')';
+        attachWarning = attachErr.message;
       }
-
-      showStatus(`Card criado com sucesso${attachWarning}. <a href="${card.shortUrl}" target="_blank">Abrir no Trello →</a>`, !attachWarning);
-      ['fTitulo','fDemandante','fOnde','fPeca','fCopyPrincipal','fCopySecundaria','fDescricao','fDataSolic','fDataSalvar']
-        .forEach(id => $(id).value = '');
-      linkRows = [];
-      addLinkRow();
-      refFiles = [];
-      renderFiles();
+      return { ok: true, title, url: card.shortUrl, attachWarning };
     }catch(e){
-      showStatus('Não consegui criar o card. Verifique a conexão e tente de novo.', false);
-    }finally{
-      btnCreate.disabled = false;
-      btnCreate.textContent = 'Criar card no Trello';
+      return { ok: false, title, error: (e && e.message) ? e.message : 'erro desconhecido' };
     }
   }
 
-  // ---- Referências: links múltiplos ----
-  let linkIdCounter = 0;
-  let linkRows = []; // {id, value}
+  async function createAllCards(){
+    const key = $('tKey').value.trim();
+    const token = $('tToken').value.trim();
+    const listId = $('selList').value;
+    if(!listId){
+      showStatus('Escolha uma lista de destino primeiro.', false);
+      return;
+    }
 
-  function addLinkRow(initial){
-    const id = 'link_' + (linkIdCounter++);
-    linkRows.push({ id, value: initial || '' });
-    renderLinks();
-  }
+    btnCreate.disabled = true;
+    btnCreate.textContent = 'Criando...';
 
-  function renderLinks(){
-    const box = $('linkList');
-    box.innerHTML = '';
-    linkRows.forEach(row => {
-      const div = document.createElement('div');
-      div.className = 'item-row';
-      div.innerHTML = `
-        <input type="text" placeholder="cole aqui o link" value="${row.value.replace(/"/g,'&quot;')}">
-        <button type="button" class="remove-x" title="Remover">✕</button>
-      `;
-      const input = div.querySelector('input');
-      input.addEventListener('input', () => { row.value = input.value; });
-      div.querySelector('.remove-x').addEventListener('click', () => {
-        linkRows = linkRows.filter(r => r.id !== row.id);
-        renderLinks();
-      });
-      box.appendChild(div);
+    const results = [];
+    for(const b of blocks){
+      results.push(await createSingleCard(b, key, token, listId));
+    }
+
+    const successCount = results.filter(r => r.ok).length;
+    const lines = results.map(r => {
+      if(r.ok){
+        return `✅ <a href="${r.url}" target="_blank">${r.title}</a>` + (r.attachWarning ? ` (referência com problema: ${r.attachWarning})` : '');
+      }
+      return `❌ ${r.title}: ${r.error}`;
     });
+
+    showStatus(`${successCount}/${results.length} card(s) criado(s):<br>${lines.join('<br>')}`, successCount === results.length);
+
+    if(successCount > 0){
+      blocks.forEach(b => b.el.remove());
+      blocks = [];
+      addBlock();
+    }
+
+    btnCreate.disabled = false;
+    updateCreateButtonLabel();
   }
 
-  function getLinkValues(){
-    return linkRows.map(r => r.value.trim()).filter(Boolean);
-  }
-
-  // ---- Referências: arquivos múltiplos ----
-  let refFiles = []; // File objects
-
-  function renderFiles(){
-    const box = $('fileList');
-    box.innerHTML = '';
-    refFiles.forEach((file, idx) => {
-      const div = document.createElement('div');
-      div.className = 'item-row';
-      div.innerHTML = `
-        <div class="chip"><span class="icon">🖼</span><span>${file.name}</span></div>
-        <button type="button" class="remove-x" title="Remover">✕</button>
-      `;
-      div.querySelector('.remove-x').addEventListener('click', () => {
-        refFiles.splice(idx, 1);
-        renderFiles();
-      });
-      box.appendChild(div);
-    });
-  }
-
-  $('btnAddLink').addEventListener('click', () => addLinkRow());
-  $('btnAddFile').addEventListener('click', () => $('fReferenciaArquivo').click());
-  $('fReferenciaArquivo').addEventListener('change', function(){
-    Array.from(this.files).forEach(f => refFiles.push(f));
-    this.value = ''; // permite escolher os mesmos arquivos de novo depois, se precisar
-    renderFiles();
-  });
-
-  addLinkRow(); // começa com uma linha de link em branco
-
+  $('btnAddBlock').addEventListener('click', addBlock);
   $('btnConnect').addEventListener('click', connect);
-  btnCreate.addEventListener('click', createCard);
+  btnCreate.addEventListener('click', createAllCards);
+
+  addBlock(); // primeiro card em branco
   loadSaved();
 })();
 </script>
