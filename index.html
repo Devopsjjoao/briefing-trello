@@ -1,287 +1,326 @@
 <style>
   :root{
-    --bg:#e7ebf1;
-    --ink:#3c4658;
-    --muted:#8891a0;
-    --shadow-light:rgba(255,255,255,.9);
-    --shadow-dark:rgba(163,177,198,.55);
-    --accent:#6c63ff;
-    --accent-dark:#5548e0;
-    --teal:#2f9e8f;
-    --indigo:#6c63ff;
-    --danger:#e0604f;
-    --line:rgba(163,177,198,.3);
+    --bg:#f5f5f7;
+    --card-bg:#ffffff;
+    --input-bg:#f0f0f3;
+    --border:rgba(15,15,20,.09);
+    --ink:#15151a;
+    --muted:#6b7280;
+    --accent-a:#8b5cf6;
+    --accent-b:#d946ef;
+    --accent-text:#7c3aed;
+    --accent-tint:rgba(139,92,246,.12);
+    --green:#16a34a;
+    --green-tint:rgba(22,163,74,.12);
+    --red:#e11d48;
+    --red-tint:rgba(225,29,72,.12);
+    --orange:#d97706;
+    --orange-tint:rgba(217,119,6,.12);
+    --pink:#db2777;
+    --pink-tint:rgba(219,39,119,.12);
+    --blue:#2563eb;
+    --blue-tint:rgba(37,99,235,.12);
     --font-body: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .briefing-app.dark{
+    --bg:#0a0a0c;
+    --card-bg:#111114;
+    --input-bg:#0c0c10;
+    --border:rgba(255,255,255,.08);
+    --ink:#f4f4f6;
+    --muted:#9a9aa5;
+    --accent-tint:rgba(139,92,246,.15);
+    --green:#4ade80;
+    --green-tint:rgba(34,197,94,.14);
+    --red:#f87171;
+    --red-tint:rgba(239,68,68,.14);
+    --orange:#fbbf24;
+    --orange-tint:rgba(245,158,11,.14);
+    --pink:#f472b6;
+    --pink-tint:rgba(236,72,153,.14);
+    --blue:#60a5fa;
+    --blue-tint:rgba(59,130,246,.14);
   }
   *{box-sizing:border-box;}
   .briefing-app{
     font-family:var(--font-body);
     color:var(--ink);
-    padding:32px 20px 60px;
-    min-height:100%;
     background:var(--bg);
+    min-height:100%;
+    padding-bottom:60px;
   }
-  .briefing-app .wrap{max-width:640px;margin:0 auto;}
-  .briefing-app .eyebrow{
-    font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--accent-dark);font-weight:700;margin-bottom:8px;
-    display:flex;align-items:center;gap:8px;
+  .briefing-app .topbar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 24px;border-bottom:1px solid var(--border);margin-bottom:28px;
   }
-  .briefing-app .eyebrow::before{
-    content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;
-    box-shadow:0 0 0 3px rgba(108,99,255,.15);
+  .briefing-app .topbar-left{display:flex;align-items:center;gap:12px;}
+  .briefing-app .logo-icon{
+    width:36px;height:36px;border-radius:11px;flex-shrink:0;
+    background:linear-gradient(145deg,var(--accent-a),var(--accent-b));
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;
   }
-  .briefing-app h1{
-    font-family:var(--font-body);
-    font-size:30px;font-weight:800;margin:0 0 4px;letter-spacing:-.01em;
-    color:var(--ink);
+  .briefing-app .topbar-title{font-size:15px;font-weight:800;color:var(--ink);}
+  .briefing-app .topbar-sub{font-size:11.5px;color:var(--muted);}
+  .briefing-app .topbar-right{display:flex;align-items:center;gap:12px;}
+  .briefing-app .conn-pill{
+    background:var(--green-tint);color:var(--green);border:1px solid var(--green);
+    font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:999px;
   }
-  .briefing-app .sub{color:var(--muted);font-size:14px;margin-bottom:26px;}
+  .briefing-app .theme-switch{
+    width:50px;height:27px;border-radius:999px;background:var(--input-bg);
+    border:1px solid var(--border);position:relative;cursor:pointer;flex-shrink:0;padding:0;
+  }
+  .briefing-app .theme-switch .knob{
+    position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:50%;
+    background:linear-gradient(145deg,var(--accent-a),var(--accent-b));
+    display:flex;align-items:center;justify-content:center;font-size:11px;transition:transform .2s;
+  }
+  .briefing-app .theme-switch.on .knob{transform:translateX(23px);}
 
-  /* ---------- neumorphism base shapes ---------- */
+  .briefing-app .wrap{max-width:660px;margin:0 auto;padding:0 20px;}
+  .briefing-app .hero{margin-bottom:28px;}
+  .briefing-app .hero h1{font-size:28px;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;color:var(--ink);}
+  .briefing-app .hero p{font-size:14px;color:var(--muted);margin:0;max-width:520px;line-height:1.5;}
+
   .briefing-app .panel{
-    background:var(--bg);border:none;border-radius:22px;
-    padding:20px 20px 22px;margin-bottom:20px;
-    box-shadow: 8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light);
+    background:var(--card-bg);border:1px solid var(--border);border-radius:16px;
+    padding:20px 22px 22px;margin-bottom:20px;
   }
-  .briefing-app .panel h2{
-    font-family:var(--font-body);font-size:15px;font-weight:700;margin:0 0 16px;
-    display:flex;align-items:center;gap:10px;color:var(--ink);
+  .briefing-app .panel-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
+  .briefing-app .panel .num{
+    width:30px;height:30px;border-radius:10px;background:var(--accent-tint);color:var(--accent-text);
+    font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
-  .briefing-app .panel h2 .num{
-    width:24px;height:24px;border-radius:9px;background:var(--bg);color:var(--accent-dark);
-    font-size:11px;display:flex;align-items:center;justify-content:center;font-family:var(--font-body);font-weight:800;
-    box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
-  }
-  .briefing-app label{
-    display:block;font-size:12px;font-weight:700;color:var(--ink);margin:14px 0 6px;
-  }
+  .briefing-app .panel h2{font-size:15.5px;font-weight:800;margin:0;color:var(--ink);}
+  .briefing-app .panel-desc{font-size:12.5px;color:var(--muted);margin:2px 0 0;}
+
+  .briefing-app label{display:block;font-size:12px;font-weight:700;color:var(--ink);margin:12px 0 6px;}
   .briefing-app label:first-of-type{margin-top:0;}
   .briefing-app input[type=text],
   .briefing-app input[type=password],
   .briefing-app input[type=date],
   .briefing-app select,
   .briefing-app textarea{
-    width:100%;padding:11px 13px;border:none;border-radius:14px;
-    font-family:var(--font-body);font-size:13.5px;background:var(--bg);color:var(--ink);
-    outline:none;transition:box-shadow .15s;
-    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+    width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:11px;
+    font-family:var(--font-body);font-size:13.5px;background:var(--input-bg);color:var(--ink);outline:none;
+    transition:border-color .15s;
   }
-  .briefing-app input:focus,.briefing-app select:focus,.briefing-app textarea:focus{
-    box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light), 0 0 0 2px rgba(108,99,255,.35);
-  }
-  .briefing-app textarea{resize:vertical;min-height:64px;}
-  .briefing-app .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:end;}
+  .briefing-app input:focus,.briefing-app select:focus,.briefing-app textarea:focus{border-color:var(--accent-a);}
+  .briefing-app textarea{resize:vertical;min-height:62px;}
+  .briefing-app .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
   .briefing-app .hint{font-size:11.5px;color:var(--muted);margin-top:8px;}
-  .briefing-app .hint a{color:var(--accent-dark);}
+  .briefing-app .hint a{color:var(--accent-text);}
 
-  .briefing-app .remember{
-    display:flex;align-items:center;gap:8px;margin-top:16px;font-size:12px;color:var(--muted);
-  }
+  .briefing-app .remember{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:12px;color:var(--muted);}
   .briefing-app .remember input{width:auto;}
 
   .briefing-app .btn{
     appearance:none;border:none;cursor:pointer;font-family:var(--font-body);font-weight:700;
-    font-size:13.5px;border-radius:14px;padding:11px 18px;
-    transition:box-shadow .12s, transform .08s;
+    font-size:13px;border-radius:11px;padding:10px 16px;transition:opacity .12s;
   }
-  .briefing-app .btn:active{transform:translateY(1px) scale(.98);}
+  .briefing-app .btn:hover{opacity:.88;}
+  .briefing-app .btn:active{transform:translateY(1px);}
   .briefing-app .btn-primary{
-    background:linear-gradient(145deg, #7d74ff, var(--accent));
-    color:#fff;width:100%;font-size:14.5px;padding:13px;margin-top:8px;
-    box-shadow: 6px 6px 14px rgba(108,99,255,.35), -4px -4px 10px rgba(255,255,255,.5);
+    width:100%;font-size:14.5px;padding:14px;margin-top:8px;color:#fff;
+    background:linear-gradient(90deg,var(--accent-a),var(--accent-b));
+    box-shadow:0 10px 26px rgba(168,85,247,.35);
+    display:flex;align-items:center;justify-content:center;gap:8px;
   }
-  .briefing-app .btn-primary:hover{background:linear-gradient(145deg, var(--accent), var(--accent-dark));}
-  .briefing-app .btn-primary:disabled{background:#c2c8d6;box-shadow:none;cursor:not-allowed;}
-  .briefing-app .btn-ghost{
-    background:var(--bg);color:var(--ink);border:none;padding:9px 13px;font-size:12.5px;
-    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-  }
-  .briefing-app .btn-ghost:active{box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);}
-  .briefing-app .btn-small{padding:7px 11px;font-size:11.5px;border-radius:11px;}
+  .briefing-app .btn-primary:disabled{background:#9ca0ad;box-shadow:none;cursor:not-allowed;}
+  .briefing-app .btn-ghost{background:var(--input-bg);color:var(--ink);border:1px solid var(--border);padding:9px 13px;font-size:12.5px;}
+  .briefing-app .btn-light{background:var(--ink);color:var(--bg);border:none;padding:9px 15px;font-size:12.5px;font-weight:700;white-space:nowrap;}
+  .briefing-app .btn-small{padding:7px 11px;font-size:11.5px;}
 
-  .briefing-app .status{
-    margin-top:16px;padding:12px 15px;border-radius:14px;font-size:13px;display:none;
-    box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
-  }
+  .briefing-app .status{margin-top:14px;padding:11px 14px;border-radius:11px;font-size:13px;display:none;}
   .briefing-app .status.show{display:block;}
-  .briefing-app .status.ok{color:#227a63;}
-  .briefing-app .status.err{color:#b3402f;}
+  .briefing-app .status.ok{background:var(--green-tint);color:var(--green);}
+  .briefing-app .status.err{background:var(--red-tint);color:var(--red);}
   .briefing-app .status a{color:inherit;font-weight:700;}
 
   .briefing-app .locked{opacity:.4;pointer-events:none;}
-  .briefing-app .divider{height:1px;background:var(--line);margin:18px 0;}
-  .briefing-app .badge{
-    font-size:10.5px;background:var(--bg);color:#227a63;padding:3px 10px;border-radius:10px;font-weight:700;letter-spacing:.02em;
-    box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
-  }
-  .briefing-app .item-row{
-    display:flex;align-items:center;gap:10px;margin-bottom:10px;
-  }
-  .briefing-app .item-row input[type=text]{flex:1;}
-  .briefing-app .item-row .chip{
-    flex:1;display:flex;align-items:center;gap:8px;background:var(--bg);border:none;
-    border-radius:12px;padding:9px 12px;font-size:13px;color:var(--ink);
-    box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
-  }
-  .briefing-app .item-row .chip img{
-    width:28px;height:28px;object-fit:cover;border-radius:8px;flex-shrink:0;
-  }
-  .briefing-app .remove-x{
-    background:var(--bg);border:none;cursor:pointer;color:var(--danger);font-size:14px;line-height:1;
-    padding:8px 9px;flex-shrink:0;border-radius:10px;
-    box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
-  }
+  .briefing-app .divider{height:1px;background:var(--border);margin:16px 0;}
 
-  .briefing-app .briefing-block{
-    background:var(--bg);
-    border-radius:18px;
-    padding:16px 18px 18px;
-    margin-top:16px;
-    box-shadow: 6px 6px 14px var(--shadow-dark), -6px -6px 14px var(--shadow-light);
-    border-left:none;
-    position:relative;
+  /* conexão: card de estado conectado */
+  .briefing-app .conn-summary-card{
+    display:flex;align-items:center;gap:14px;background:var(--input-bg);border:1px solid var(--border);
+    border-radius:13px;padding:14px 16px;
   }
-  .briefing-app .briefing-block::before{
-    content:"";position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:4px;
-    background:var(--teal);
+  .briefing-app .conn-summary-icon{
+    width:38px;height:38px;border-radius:11px;background:var(--green-tint);color:var(--green);
+    display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
   }
-  .briefing-app .briefing-block.identity-playbet::before{background:var(--indigo);}
-  .briefing-app .briefing-block:first-child{margin-top:0;}
-  .briefing-app .block-header{
-    display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;
-    cursor:pointer;user-select:none;gap:8px;padding-left:8px;
-  }
-  .briefing-app .block-header-left{display:flex;align-items:center;gap:9px;min-width:0;overflow:hidden;}
-  .briefing-app .block-header-left::before{
-    content:"";width:18px;height:18px;border-radius:50%;background:var(--bg);flex-shrink:0;
-    box-shadow: 2px 2px 4px var(--shadow-dark), -2px -2px 4px var(--shadow-light);
-  }
-  .briefing-app .block-chevron{
-    font-size:11px;color:var(--muted);transition:transform .15s;flex-shrink:0;
-  }
-  .briefing-app .briefing-block.collapsed .block-chevron{transform:rotate(-90deg);}
-  .briefing-app .block-title{
-    font-family:var(--font-body);font-weight:700;font-size:14px;color:var(--ink);flex-shrink:0;
-  }
-  .briefing-app .block-summary{
-    font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  }
-  .briefing-app .block-body{display:block;padding-top:10px;padding-left:8px;}
-  .briefing-app .briefing-block.collapsed .block-body{display:none;}
-  .briefing-app .block-actions{display:flex;gap:6px;flex-shrink:0;}
-  .briefing-app .dup-block-btn{
-    background:var(--bg);border:none;color:var(--accent-dark);font-size:11.5px;cursor:pointer;font-weight:700;
-    padding:6px 10px;border-radius:10px;flex-shrink:0;white-space:nowrap;
-    box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
-  }
-  .briefing-app .remove-block-x{
-    background:var(--bg);border:none;color:var(--danger);font-size:11.5px;cursor:pointer;font-weight:700;
-    padding:6px 10px;border-radius:10px;flex-shrink:0;white-space:nowrap;
-    box-shadow: 2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
-  }
-  .briefing-app #btnAddBlock{margin-top:14px;width:100%;text-align:center;}
+  .briefing-app .conn-summary-text{flex:1;min-width:0;}
+  .briefing-app .conn-summary-title{font-size:13.5px;font-weight:700;color:var(--ink);}
+  .briefing-app .conn-summary-title b{color:var(--accent-text);}
+  .briefing-app .conn-summary-sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
 
+  /* etiquetas */
   .briefing-app .label-chip{
-    display:inline-flex;align-items:center;height:26px;border-radius:10px;
-    font-size:12px;font-weight:700;cursor:pointer;margin:0 8px 8px 0;
-    background:var(--bg);color:var(--ink);padding:0 12px;
-    box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
-    transition:box-shadow .12s;
-  }
-  .briefing-app .label-chip.selected{
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,.18), inset -2px -2px 5px rgba(255,255,255,.35);
-    color:#fff;
+    display:inline-flex;align-items:center;gap:6px;height:26px;border-radius:999px;
+    font-size:12px;font-weight:700;cursor:pointer;margin:0 8px 8px 0;padding:0 12px;
+    background:var(--input-bg);border:1px solid var(--border);color:var(--muted);
   }
   .briefing-app .label-chip input{display:none;}
+  .briefing-app .label-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;}
   .briefing-app .labelList{display:flex;flex-wrap:wrap;margin:6px 0 4px;}
 
-  .briefing-app .checkbox-row{
-    display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:400;margin-top:16px;cursor:pointer;
+  /* referências visuais */
+  .briefing-app .refList{display:flex;flex-direction:column;gap:8px;margin:6px 0 10px;}
+  .briefing-app .ref-item{
+    display:flex;align-items:center;gap:10px;background:var(--input-bg);border:1px solid var(--border);
+    border-radius:12px;padding:8px 10px;
   }
-  .briefing-app .checkbox-row input{width:auto;margin:0;}
+  .briefing-app .ref-icon{
+    width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    font-size:15px;overflow:hidden;
+  }
+  .briefing-app .ref-icon.link{background:var(--blue-tint);color:var(--blue);}
+  .briefing-app .ref-icon.file img{width:100%;height:100%;object-fit:cover;}
+  .briefing-app .ref-text{min-width:0;flex:1;}
+  .briefing-app .ref-title{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .briefing-app .ref-sub{font-size:11px;color:var(--muted);}
+  .briefing-app .ref-add-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .briefing-app .ref-add-row input{flex:1;min-width:140px;}
 
+  .briefing-app .checkbox-row{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:400;margin-top:16px;cursor:pointer;color:var(--ink);}
+  .briefing-app .checkbox-row input{width:auto;margin:0;accent-color:var(--accent-a);}
+
+  /* cards de briefing */
+  .briefing-app .briefing-block{
+    background:var(--card-bg);border:1px solid var(--border);border-radius:14px;
+    padding:14px 16px 16px;margin-top:14px;
+  }
+  .briefing-app .briefing-block:first-child{margin-top:0;}
+  .briefing-app .block-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer;user-select:none;}
+  .briefing-app .block-header-left{display:flex;gap:10px;min-width:0;}
+  .briefing-app .block-num{
+    width:26px;height:26px;border-radius:50%;background:var(--accent-tint);color:var(--accent-text);
+    font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+  }
+  .briefing-app .block-heading{min-width:0;}
+  .briefing-app .block-title{font-size:14.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .briefing-app .block-meta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .briefing-app .block-meta .meta-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .briefing-app .block-actions{display:flex;gap:5px;flex-shrink:0;}
+  .briefing-app .icon-btn{
+    width:29px;height:29px;border-radius:9px;border:1px solid var(--border);background:var(--input-bg);
+    color:var(--muted);cursor:pointer;font-size:12.5px;display:flex;align-items:center;justify-content:center;transition:transform .15s;
+  }
+  .briefing-app .icon-btn:hover{color:var(--ink);}
+  .briefing-app .briefing-block.collapsed .collapse-toggle-btn{transform:rotate(-90deg);}
+  .briefing-app .block-body{padding-top:14px;}
+  .briefing-app .briefing-block.collapsed .block-body{display:none;}
+  .briefing-app #btnAddBlock{margin-top:14px;width:100%;text-align:center;}
+
+  /* seletor identidade */
+  .briefing-app .ident-toggle{display:flex;gap:8px;}
+  .briefing-app .ident-btn{
+    flex:1;display:flex;align-items:center;gap:7px;justify-content:center;padding:10px 10px;border-radius:11px;
+    background:var(--input-bg);border:1px solid var(--border);color:var(--muted);font-size:12.5px;font-weight:700;cursor:pointer;
+  }
+  .briefing-app .ident-btn .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .briefing-app .ident-btn[data-value="MC Games"] .dot{background:var(--green);}
+  .briefing-app .ident-btn[data-value="PlayBet"] .dot{background:var(--red);}
+  .briefing-app .ident-btn.active[data-value="MC Games"]{background:var(--green-tint);border-color:var(--green);color:var(--green);}
+  .briefing-app .ident-btn.active[data-value="PlayBet"]{background:var(--red-tint);border-color:var(--red);color:var(--red);}
+
+  .briefing-app .remove-x{background:none;border:none;cursor:pointer;color:var(--red);font-size:15px;line-height:1;padding:4px 6px;flex-shrink:0;}
+
+  /* histórico */
   .briefing-app .history-item{
-    font-size:13px;padding:9px 12px;margin-bottom:8px;border-radius:12px;display:flex;justify-content:space-between;gap:10px;
-    background:var(--bg);
-    box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+    display:flex;align-items:center;gap:12px;background:var(--input-bg);border:1px solid var(--border);
+    border-radius:12px;padding:10px 12px;margin-bottom:8px;
   }
-  .briefing-app .history-item a{color:var(--accent-dark);font-weight:700;}
-  .briefing-app .hist-date{color:var(--muted);font-size:11px;white-space:nowrap;flex-shrink:0;}
-
-  /* ---------- dark mode ---------- */
-  .briefing-app{position:relative;}
-  .briefing-app.dark{
-    --bg:#2b2f38;
-    --ink:#e4e7ec;
-    --muted:#9aa3b2;
-    --shadow-light:rgba(255,255,255,.06);
-    --shadow-dark:rgba(0,0,0,.55);
-    --accent:#8f87ff;
-    --accent-dark:#a79dff;
-    --teal:#3fc7b2;
-    --indigo:#a79dff;
-    --danger:#ff8a75;
-    --line:rgba(0,0,0,.4);
+  .briefing-app .history-item:last-child{margin-bottom:0;}
+  .briefing-app .history-check{
+    width:26px;height:26px;border-radius:50%;background:var(--green-tint);color:var(--green);
+    display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;
   }
-  .briefing-app.dark .btn-primary{
-    background:linear-gradient(145deg, #8f87ff, #6c63ff);
-    box-shadow: 6px 6px 14px rgba(0,0,0,.5), -4px -4px 10px rgba(255,255,255,.05);
-  }
-  .briefing-app.dark .label-chip.selected{color:#1c1f26;}
-  .briefing-app .theme-toggle{
-    position:absolute;top:32px;right:20px;
-    width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
-    background:var(--bg);font-size:17px;line-height:1;
-    box-shadow:4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
-    display:flex;align-items:center;justify-content:center;
-    transition:box-shadow .12s;
-  }
-  .briefing-app .theme-toggle:active{
-    box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
-  }
+  .briefing-app .history-text{flex:1;min-width:0;}
+  .briefing-app .history-title{font-size:13.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .briefing-app .history-sub{font-size:11.5px;color:var(--muted);}
+  .briefing-app .history-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+  .briefing-app .hist-date{font-size:11px;color:var(--muted);white-space:nowrap;}
+  .briefing-app .hist-link{color:var(--muted);text-decoration:none;font-size:13px;}
 </style>
 
-<div class="briefing-app">
-  <button id="themeToggle" class="theme-toggle" title="Alternar tema claro/escuro" type="button">🌙</button>
+<div class="briefing-app dark" id="briefingApp">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo-icon">✦</div>
+      <div>
+        <div class="topbar-title">Briefing → Trello</div>
+        <div class="topbar-sub">Criação em lote de cards criativos</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="conn-pill" id="connPill" style="display:none;">● Conectado</span>
+      <button class="theme-switch on" id="themeToggle" type="button" title="Alternar tema"><span class="knob">🌙</span></button>
+    </div>
+  </div>
+
   <div class="wrap">
-    <div class="eyebrow">Gestão de projeto</div>
-    <h1>Briefing → Trello</h1>
-    <div class="sub">Preencha um ou mais briefings e crie todos os cards de uma vez.</div>
+    <div class="hero">
+      <h1>Transforme briefings em cards Trello</h1>
+      <p>Preencha uma vez, crie em lote. Cada briefing vira um card completo com cópias, etiquetas e referências visuais — sem trabalho repetitivo.</p>
+    </div>
 
     <!-- CONEXÃO -->
     <div class="panel" id="panel-conn">
-      <h2><span class="num">1</span>Conectar ao Trello</h2>
-
-      <label for="selProfile">Perfil salvo (opcional)</label>
-      <div class="row2">
-        <select id="selProfile"><option value="">— selecionar perfil salvo —</option></select>
-        <button class="btn btn-ghost btn-small" id="btnSaveProfile" type="button">💾 Salvar perfil atual</button>
-      </div>
-
-      <div class="row2" style="margin-top:14px;">
+      <div class="panel-head">
+        <span class="num">01</span>
         <div>
-          <label for="tKey">API Key</label>
-          <input type="text" id="tKey" placeholder="sua API key" autocomplete="off">
-        </div>
-        <div>
-          <label for="tToken">Token</label>
-          <input type="password" id="tToken" placeholder="seu token" autocomplete="off">
+          <h2>Conectar ao Trello</h2>
+          <p class="panel-desc">Autentique com seu perfil salvo para começar.</p>
         </div>
       </div>
-      <div class="hint">Não tem? Gere em <a href="https://trello.com/power-ups/admin" target="_blank">trello.com/power-ups/admin</a> (criar Power-Up → gerar API Key → gerar Token).</div>
-      <div class="remember">
-        <input type="checkbox" id="remember" checked>
-        <label style="margin:0;font-weight:400;" for="remember">Lembrar neste navegador (salvo só para você, ninguém mais vê)</label>
+
+      <div id="connForm">
+        <label for="selProfile">Perfil salvo (opcional)</label>
+        <div class="row2">
+          <select id="selProfile"><option value="">— selecionar perfil salvo —</option></select>
+          <button class="btn btn-ghost btn-small" id="btnSaveProfile" type="button">💾 Salvar perfil atual</button>
+        </div>
+
+        <div class="row2" style="margin-top:14px;">
+          <div>
+            <label for="tKey">API Key</label>
+            <input type="text" id="tKey" placeholder="sua API key" autocomplete="off">
+          </div>
+          <div>
+            <label for="tToken">Token</label>
+            <input type="password" id="tToken" placeholder="seu token" autocomplete="off">
+          </div>
+        </div>
+        <div class="hint">Não tem? Gere em <a href="https://trello.com/power-ups/admin" target="_blank">trello.com/power-ups/admin</a> (criar Power-Up → gerar API Key → gerar Token).</div>
+        <div class="remember">
+          <input type="checkbox" id="remember" checked>
+          <label style="margin:0;font-weight:400;" for="remember">Lembrar neste navegador (salvo só para você, ninguém mais vê)</label>
+        </div>
+        <button class="btn btn-ghost" id="btnConnect" style="margin-top:12px;">Conectar</button>
       </div>
-      <button class="btn btn-ghost" id="btnConnect" style="margin-top:12px;">Conectar</button>
-      <span id="connBadge" class="badge" style="display:none;margin-left:8px;">conectado</span>
+
+      <div class="conn-summary-card" id="connSummary" style="display:none;">
+        <div class="conn-summary-icon">🛡️</div>
+        <div class="conn-summary-text">
+          <div class="conn-summary-title">Conectado como <b id="connSummaryName">—</b></div>
+          <div class="conn-summary-sub" id="connSummarySub">Token válido</div>
+        </div>
+        <button class="btn btn-ghost btn-small" id="btnEditCreds" type="button">Editar credenciais</button>
+      </div>
+
       <div class="status" id="connStatus"></div>
     </div>
 
     <!-- DESTINO -->
     <div class="panel locked" id="panel-dest">
-      <h2><span class="num">2</span>Onde criar os cards</h2>
+      <div class="panel-head">
+        <span class="num">02</span>
+        <div>
+          <h2>Destino</h2>
+          <p class="panel-desc">Onde os novos cards serão criados.</p>
+        </div>
+      </div>
       <div class="row2">
         <div>
           <label for="selBoard">Board</label>
@@ -292,13 +331,18 @@
           <select id="selList"><option>—</option></select>
         </div>
       </div>
-      <div class="hint">Todos os cards criados de uma vez vão para essa mesma lista.</div>
-      <button class="btn btn-ghost btn-small" id="btnSaveTemplate" type="button" style="margin-top:10px;">⭐ Salvar este board/lista como padrão</button>
+      <button class="btn btn-ghost btn-small" id="btnSaveTemplate" type="button" style="margin-top:12px;">⭐ Salvar como padrão</button>
     </div>
 
     <!-- BRIEFINGS -->
     <div class="panel locked" id="panel-form">
-      <h2><span class="num">3</span>Preencher os briefings</h2>
+      <div class="panel-head">
+        <span class="num">03</span>
+        <div>
+          <h2>Briefings</h2>
+          <p class="panel-desc">Preencha cada peça. Empilhe quantos precisar.</p>
+        </div>
+      </div>
 
       <div id="blocksContainer"></div>
 
@@ -306,13 +350,19 @@
 
       <div class="divider"></div>
 
-      <button class="btn btn-primary" id="btnCreate" disabled>Criar card no Trello</button>
+      <button class="btn btn-primary" id="btnCreate" disabled>⚡ Criar card no Trello</button>
       <div class="status" id="status"></div>
     </div>
 
     <!-- HISTÓRICO -->
     <div class="panel" id="panel-history">
-      <h2><span class="num">4</span>Histórico recente</h2>
+      <div class="panel-head">
+        <span class="num">04</span>
+        <div>
+          <h2>Histórico recente</h2>
+          <p class="panel-desc">Últimos cards criados por esta ferramenta.</p>
+        </div>
+      </div>
       <div id="historyList" class="hint">Nenhum card criado ainda.</div>
     </div>
 
@@ -326,23 +376,41 @@
   const PROFILES_KEY = 'trello-briefing-profiles';
   const TEMPLATE_KEY = 'trello-briefing-template';
   const HISTORY_KEY = 'trello-briefing-history';
+  const THEME_KEY = 'trello-briefing-theme';
 
-  const connBadge = $('connBadge');
+  const appRoot = $('briefingApp');
   const panelDest = $('panel-dest');
   const panelForm = $('panel-form');
   const btnCreate = $('btnCreate');
   const statusBox = $('status');
+  const connPill = $('connPill');
 
   function showStatus(msg, ok){
     statusBox.className = 'status show ' + (ok ? 'ok' : 'err');
     statusBox.innerHTML = msg;
   }
-
   function showConnStatus(msg, ok){
     const box = $('connStatus');
     box.className = 'status show ' + (ok ? 'ok' : 'err');
     box.innerHTML = msg;
   }
+
+  // ---------- tema claro/escuro ----------
+  function applyTheme(dark){
+    appRoot.classList.toggle('dark', dark);
+    $('themeToggle').classList.toggle('on', dark);
+  }
+  async function loadTheme(){
+    try{
+      const r = await window.storage.get(THEME_KEY, false);
+      applyTheme(r ? r.value === 'dark' : true);
+    }catch(e){ applyTheme(true); }
+  }
+  $('themeToggle').addEventListener('click', async () => {
+    const isDark = !appRoot.classList.contains('dark');
+    applyTheme(isDark);
+    try{ await window.storage.set(THEME_KEY, isDark ? 'dark' : 'light', false); }catch(e){}
+  });
 
   // ---------- credenciais (último usado) ----------
   async function loadSaved(){
@@ -353,14 +421,13 @@
         $('tKey').value = c.key || '';
         $('tToken').value = c.token || '';
       }
-    }catch(e){ /* nada salvo ainda */ }
+    }catch(e){}
   }
   async function saveCreds(key, token){
-    try{ await window.storage.set(STORAGE_KEY, JSON.stringify({key, token}), false); }
-    catch(e){ console.error('Falha ao salvar credenciais', e); }
+    try{ await window.storage.set(STORAGE_KEY, JSON.stringify({key, token}), false); }catch(e){}
   }
 
-  // ---------- perfis (múltiplas contas) ----------
+  // ---------- perfis ----------
   let profiles = [];
   async function loadProfiles(){
     try{
@@ -394,10 +461,10 @@
     profiles.push({ label, key, token });
     try{ await window.storage.set(PROFILES_KEY, JSON.stringify(profiles), false); }catch(e){}
     renderProfileSelect();
-    showConnStatus(`Perfil "${label}" salvo. Da próxima vez, selecione ele na lista acima.`, true);
+    showConnStatus(`Perfil "${label}" salvo.`, true);
   });
 
-  // ---------- template padrão (board/lista/identidade) ----------
+  // ---------- template padrão ----------
   let savedTemplate = null;
   async function loadTemplate(){
     try{
@@ -430,9 +497,18 @@
     const box = $('historyList');
     if(!history.length){ box.className = 'hint'; box.textContent = 'Nenhum card criado ainda.'; return; }
     box.className = '';
-    box.innerHTML = history.slice(0, 20).map(h =>
-      `<div class="history-item"><span>📌 <a href="${h.url}" target="_blank">${h.title}</a></span><span class="hist-date">${h.date}</span></div>`
-    ).join('');
+    box.innerHTML = history.slice(0, 20).map(h => `
+      <div class="history-item">
+        <div class="history-check">✓</div>
+        <div class="history-text">
+          <div class="history-title">${h.title}</div>
+          <div class="history-sub">${h.board || ''}</div>
+        </div>
+        <div class="history-right">
+          <span class="hist-date">${h.date}</span>
+          <a class="hist-link" href="${h.url}" target="_blank">↗</a>
+        </div>
+      </div>`).join('');
   }
   async function addHistoryEntries(entries){
     if(!entries.length) return;
@@ -453,9 +529,9 @@
   let boardLabels = [];
 
   function trelloColor(name){
-    const map = { green:'#4bce97', yellow:'#e2b203', orange:'#faa53d', red:'#f87462', purple:'#9f8fef',
-      blue:'#579dff', sky:'#6cc3e0', lime:'#94c748', pink:'#e774bb', black:'#8c9bab' };
-    return map[name] || '#c9c9c9';
+    const map = { green:'#22c55e', yellow:'#eab308', orange:'#f59e0b', red:'#ef4444', purple:'#a855f7',
+      blue:'#3b82f6', sky:'#0ea5e9', lime:'#84cc16', pink:'#ec4899', black:'#6b7280' };
+    return map[name] || '#8891a0';
   }
 
   function renderLabelsForBlock(blockData){
@@ -470,22 +546,24 @@
       const wrap = document.createElement('label');
       const color = trelloColor(lb.color);
       wrap.className = 'label-chip';
-      wrap.innerHTML = `<input type="checkbox" value="${lb.id}"><span>${lb.name || lb.color || 'sem nome'}</span>`;
+      wrap.innerHTML = `<input type="checkbox" value="${lb.id}"><span class="dot"></span><span>${lb.name || lb.color || 'sem nome'}</span>`;
       const cb = wrap.querySelector('input');
+      const dot = wrap.querySelector('.dot');
       cb.checked = blockData.selectedLabelIds.has(lb.id);
 
       function paint(){
+        dot.style.background = color;
         if(cb.checked){
-          wrap.classList.add('selected');
-          wrap.style.background = color;
+          wrap.style.background = color + '22';
+          wrap.style.borderColor = color;
+          wrap.style.color = color;
         } else {
-          wrap.classList.remove('selected');
           wrap.style.background = '';
+          wrap.style.borderColor = '';
           wrap.style.color = '';
         }
       }
       paint();
-
       cb.addEventListener('change', () => {
         if(cb.checked) blockData.selectedLabelIds.add(lb.id); else blockData.selectedLabelIds.delete(lb.id);
         paint();
@@ -525,9 +603,13 @@
       panelDest.classList.remove('locked');
       panelForm.classList.remove('locked');
       btnCreate.disabled = false;
-      connBadge.style.display = 'inline-block';
-      $('btnConnect').textContent = 'Reconectar';
-      showConnStatus(`Conectado como ${currentMemberName}. ${boards.length} board(s) encontrado(s).`, true);
+
+      $('connForm').style.display = 'none';
+      $('connSummary').style.display = 'flex';
+      $('connSummaryName').textContent = currentMemberName;
+      $('connSummarySub').textContent = `Token válido · ${boards.length} board(s) encontrado(s)`;
+      connPill.style.display = 'inline-block';
+      showConnStatus('', false); $('connStatus').className = 'status';
 
       if($('remember').checked) saveCreds(key, token);
 
@@ -535,10 +617,16 @@
       selBoard.addEventListener('change', () => loadLists(selBoard.value, key, token));
     }catch(e){
       showConnStatus('Não consegui conectar. Detalhe técnico: ' + (e && e.message ? e.message : 'erro desconhecido') +
-        '. Confira se a API Key e o Token estão corretos, se o token não expirou, e se sua rede/navegador não está bloqueando o pedido (veja o Console do navegador, F12, por mais detalhes).', false);
+        '. Confira se a API Key e o Token estão corretos, se o token não expirou, e se sua rede/navegador não está bloqueando o pedido (F12 pra ver o console).', false);
       $('btnConnect').textContent = 'Conectar';
     }
   }
+
+  $('btnEditCreds').addEventListener('click', () => {
+    $('connForm').style.display = 'block';
+    $('connSummary').style.display = 'none';
+    $('btnConnect').textContent = 'Reconectar';
+  });
 
   async function loadLists(boardId, key, token){
     const selList = $('selList');
@@ -567,9 +655,9 @@
   }
 
   // =========================================================
-  // BLOCOS DE BRIEFING (permite criar vários cards de uma vez)
+  // BLOCOS DE BRIEFING
   // =========================================================
-  let blocks = []; // { uid, el, linkRows:[{id,value}], refFiles:[File], selectedLabelIds:Set }
+  let blocks = [];
   let blockCounter = 0;
 
   function blockTemplate(num){
@@ -577,18 +665,21 @@
       <div class="briefing-block identity-mcgames">
         <div class="block-header">
           <div class="block-header-left">
-            <span class="block-chevron">▾</span>
-            <span class="block-title">Card ${num}</span>
-            <span class="block-summary"></span>
+            <span class="block-num">${num}</span>
+            <div class="block-heading">
+              <div class="block-title">Novo briefing</div>
+              <div class="block-meta"><span class="meta-dot"></span>Preencha os campos abaixo</div>
+            </div>
           </div>
           <div class="block-actions">
-            <button type="button" class="dup-block-btn" title="Duplicar este card">⧉ duplicar</button>
-            <button type="button" class="remove-block-x">✕ remover</button>
+            <button type="button" class="icon-btn dup-block-btn" title="Duplicar este card">⧉</button>
+            <button type="button" class="icon-btn remove-block-x" title="Remover este card">🗑</button>
+            <button type="button" class="icon-btn collapse-toggle-btn" title="Expandir/colapsar">⌄</button>
           </div>
         </div>
 
         <div class="block-body">
-        <label>Título do card</label>
+        <label>Título do briefing</label>
         <input type="text" data-f="titulo" placeholder="ex: Post feed — Lançamento julho">
 
         <div class="row2">
@@ -598,7 +689,11 @@
           </div>
           <div>
             <label>Identidade</label>
-            <select data-f="identidade">
+            <div class="ident-toggle">
+              <button type="button" class="ident-btn" data-value="MC Games"><span class="dot"></span>MC Games</button>
+              <button type="button" class="ident-btn" data-value="PlayBet"><span class="dot"></span>PlayBet</button>
+            </div>
+            <select data-f="identidade" style="display:none;">
               <option value="MC Games">MC Games</option>
               <option value="PlayBet">PlayBet</option>
             </select>
@@ -611,16 +706,16 @@
             <input type="date" data-f="dataSolic">
           </div>
           <div>
-            <label>Data para salvar (prazo)</label>
+            <label>Data de entrega</label>
             <input type="date" data-f="dataSalvar">
           </div>
         </div>
 
-        <label>Onde será veiculada?</label>
-        <input type="text" data-f="onde" placeholder="ex: Instagram feed, Stories, site...">
+        <label>Onde será veiculada</label>
+        <input type="text" data-f="onde" placeholder="ex: Instagram Feed + Reels">
 
-        <label>Qual peça?</label>
-        <input type="text" data-f="peca" placeholder="ex: carrossel, banner, vídeo curto...">
+        <label>Qual peça</label>
+        <input type="text" data-f="peca" placeholder="ex: Post estático 1080x1080 + Reel 1080x1920">
 
         <label>Copy principal</label>
         <textarea data-f="copyPrincipal" placeholder="texto principal da peça"></textarea>
@@ -634,18 +729,18 @@
         <label>Etiquetas</label>
         <div class="labelList"><span class="hint">Conecte-se e escolha um board para ver as etiquetas.</span></div>
 
-        <label>Referência (links do Drive, imagens na web etc.)</label>
-        <div class="linkList"></div>
-        <button class="btn btn-ghost btn-add-link" type="button">+ Adicionar link</button>
-
-        <label style="margin-top:18px;">Referência (subir PNG/JPG do computador)</label>
-        <div class="fileList"></div>
-        <button class="btn btn-ghost btn-add-file" type="button">+ Adicionar imagem</button>
+        <label>Referências visuais</label>
+        <div class="refList"></div>
+        <div class="ref-add-row">
+          <input type="text" class="ref-link-input" placeholder="Cole um link de referência">
+          <button type="button" class="btn btn-light btn-add-link-new">Adicionar</button>
+          <button type="button" class="btn btn-ghost btn-add-file">📤 Enviar imagem</button>
+        </div>
         <input type="file" class="file-input-hidden" accept="image/*" multiple style="display:none">
 
         <label class="checkbox-row">
           <input type="checkbox" class="checklist-toggle" checked>
-          <span>Criar checklist de aprovação (Aprovar copy, Aprovar arte, Publicar)</span>
+          <span>☑ Criar checklist de aprovação automática</span>
         </label>
         </div>
       </div>
@@ -658,12 +753,13 @@
   }
 
   function updateCreateButtonLabel(){
-    btnCreate.textContent = blocks.length > 1 ? `Criar ${blocks.length} cards no Trello` : 'Criar card no Trello';
+    const label = blocks.length > 1 ? `Criar ${blocks.length} cards no Trello` : 'Criar card no Trello';
+    btnCreate.innerHTML = '⚡ ' + label;
   }
 
   function renumberBlocks(){
     blocks.forEach((b, i) => {
-      b.el.querySelector('.block-title').textContent = 'Card ' + (i + 1);
+      b.el.querySelector('.block-num').textContent = i + 1;
     });
   }
 
@@ -679,83 +775,99 @@
 
     let linkIdCounter = 0;
 
-    function renderLinks(){
-      const box = el.querySelector('.linkList');
+    function renderRefs(){
+      const box = el.querySelector('.refList');
       box.innerHTML = '';
       blockData.linkRows.forEach(row => {
         const div = document.createElement('div');
-        div.className = 'item-row';
+        div.className = 'ref-item';
         div.innerHTML = `
-          <input type="text" placeholder="cole aqui o link" value="${row.value.replace(/"/g,'&quot;')}">
+          <div class="ref-icon link">🔗</div>
+          <div class="ref-text"><div class="ref-title">${row.value}</div><div class="ref-sub">Link</div></div>
           <button type="button" class="remove-x" title="Remover">✕</button>
         `;
-        div.querySelector('input').addEventListener('input', e => { row.value = e.target.value; });
         div.querySelector('.remove-x').addEventListener('click', () => {
           blockData.linkRows = blockData.linkRows.filter(r => r.id !== row.id);
-          renderLinks();
+          renderRefs();
         });
         box.appendChild(div);
       });
-    }
-    function addLinkRow(initial){
-      blockData.linkRows.push({ id: 'l' + (linkIdCounter++), value: initial || '' });
-      renderLinks();
-    }
-
-    function renderFiles(){
-      const box = el.querySelector('.fileList');
-      box.innerHTML = '';
       blockData.refFiles.forEach((file, idx) => {
         const div = document.createElement('div');
-        div.className = 'item-row';
+        div.className = 'ref-item';
         const previewUrl = URL.createObjectURL(file);
         div.innerHTML = `
-          <div class="chip"><img src="${previewUrl}" alt=""><span>${file.name}</span></div>
+          <div class="ref-icon file"><img src="${previewUrl}" alt=""></div>
+          <div class="ref-text"><div class="ref-title">${file.name}</div><div class="ref-sub">Imagem enviada</div></div>
           <button type="button" class="remove-x" title="Remover">✕</button>
         `;
         div.querySelector('.remove-x').addEventListener('click', () => {
           URL.revokeObjectURL(previewUrl);
           blockData.refFiles.splice(idx, 1);
-          renderFiles();
+          renderRefs();
         });
         box.appendChild(div);
       });
     }
 
-    el.querySelector('.btn-add-link').addEventListener('click', () => addLinkRow());
+    el.querySelector('.btn-add-link-new').addEventListener('click', () => {
+      const input = el.querySelector('.ref-link-input');
+      const val = input.value.trim();
+      if(!val) return;
+      blockData.linkRows.push({ id: 'l' + (linkIdCounter++), value: val });
+      input.value = '';
+      renderRefs();
+    });
     el.querySelector('.btn-add-file').addEventListener('click', () => el.querySelector('.file-input-hidden').click());
     el.querySelector('.file-input-hidden').addEventListener('change', function(){
       Array.from(this.files).forEach(f => blockData.refFiles.push(f));
       this.value = '';
-      renderFiles();
+      renderRefs();
     });
 
-    // cor da barra lateral conforme a Identidade escolhida
+    // identidade (toggle buttons + select oculto)
     const selIdentidade = el.querySelector('[data-f="identidade"]');
-    function updateIdentityColor(){
-      el.classList.remove('identity-mcgames', 'identity-playbet');
-      el.classList.add(selIdentidade.value === 'PlayBet' ? 'identity-playbet' : 'identity-mcgames');
+    function syncIdentButtons(){
+      el.querySelectorAll('.ident-btn').forEach(b => b.classList.toggle('active', b.dataset.value === selIdentidade.value));
     }
-    selIdentidade.addEventListener('change', updateIdentityColor);
+    el.querySelectorAll('.ident-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selIdentidade.value = btn.dataset.value;
+        syncIdentButtons();
+        selIdentidade.dispatchEvent(new Event('change'));
+      });
+    });
 
-    // resumo mostrado quando o card está colapsado
-    const summaryEl = el.querySelector('.block-summary');
+    // resumo (título + meta) sempre visível no cabeçalho
+    const titleEl = el.querySelector('.block-title');
+    const metaEl = el.querySelector('.block-meta');
     function updateSummary(){
-      const parts = [getField(el, 'peca'), getField(el, 'demandante')].filter(Boolean);
-      summaryEl.textContent = parts.length ? '— ' + parts.join(', ') : '';
+      const titulo = getField(el, 'titulo').trim();
+      const peca = getField(el, 'peca');
+      const demandante = getField(el, 'demandante');
+      titleEl.textContent = titulo || [peca, demandante].filter(Boolean).join(' — ') || 'Novo briefing';
+
+      const ident = getField(el, 'identidade');
+      const dataSalvar = getField(el, 'dataSalvar');
+      let dataFmt = null;
+      if(dataSalvar){
+        const d = new Date(dataSalvar + 'T00:00:00');
+        if(!isNaN(d)) dataFmt = 'entrega ' + d.toLocaleDateString('pt-BR');
+      }
+      const metaParts = [ident, peca, dataFmt].filter(Boolean);
+      metaEl.innerHTML = `<span class="meta-dot" style="background:${ident === 'PlayBet' ? 'var(--red)' : 'var(--green)'}"></span>${metaParts.join(' · ') || 'Preencha os campos abaixo'}`;
     }
     el.querySelectorAll('input, textarea, select').forEach(inp => {
       inp.addEventListener('input', updateSummary);
       inp.addEventListener('change', updateSummary);
     });
 
-    // colapsar/expandir ao clicar no cabeçalho (menos nos botões de ação)
     el.querySelector('.block-header').addEventListener('click', (e) => {
       if(e.target.closest('.block-actions')) return;
       el.classList.toggle('collapsed');
     });
     el.querySelector('.remove-block-x').addEventListener('click', () => {
-      if(blocks.length <= 1) return; // sempre mantém pelo menos 1 card
+      if(blocks.length <= 1) return;
       blocks = blocks.filter(b => b.uid !== blockData.uid);
       el.remove();
       renumberBlocks();
@@ -778,24 +890,22 @@
         const node = el.querySelector(`[data-f="${name}"]`);
         if(node) node.value = val;
       });
-      (prefill.linkRows || []).forEach(r => addLinkRow(r.value));
-      if(!(prefill.linkRows || []).length) addLinkRow();
+      (prefill.linkRows || []).forEach(r => blockData.linkRows.push({ id: 'l' + (linkIdCounter++), value: r.value }));
       (prefill.refFiles || []).forEach(f => blockData.refFiles.push(f));
-      renderFiles();
+      renderRefs();
       (prefill.labelIds || new Set()).forEach(id => blockData.selectedLabelIds.add(id));
       if(prefill.checklistOn === false) el.querySelector('.checklist-toggle').checked = false;
     } else {
       if(savedTemplate && savedTemplate.identidade){
         selIdentidade.value = savedTemplate.identidade;
       }
-      addLinkRow();
+      renderRefs();
     }
 
-    updateIdentityColor();
+    syncIdentButtons();
     updateSummary();
     renderLabelsForBlock(blockData);
 
-    // colapsa os cards anteriores automaticamente, mantendo só o novo aberto
     blocks.slice(0, -1).forEach(b => b.el.classList.add('collapsed'));
 
     updateCreateButtonLabel();
@@ -833,30 +943,21 @@
   async function attachToCard(cardId, key, token, blockData){
     const links = blockData.linkRows.map(r => r.value.trim()).filter(Boolean);
     const errors = [];
-
     for(const link of links){
       try{
         const p = new URLSearchParams({ key, token, url: link });
         const r = await fetch(`https://api.trello.com/1/cards/${cardId}/attachments?${p.toString()}`, { method: 'POST' });
         if(!r.ok) throw new Error('status ' + r.status);
-      }catch(e){
-        errors.push(`link "${link}"`);
-      }
+      }catch(e){ errors.push(`link "${link}"`); }
     }
-
     for(const file of blockData.refFiles){
       try{
         const fd = new FormData();
-        fd.append('key', key);
-        fd.append('token', token);
-        fd.append('file', file);
+        fd.append('key', key); fd.append('token', token); fd.append('file', file);
         const r = await fetch(`https://api.trello.com/1/cards/${cardId}/attachments`, { method: 'POST', body: fd });
         if(!r.ok) throw new Error('status ' + r.status);
-      }catch(e){
-        errors.push(`arquivo "${file.name}"`);
-      }
+      }catch(e){ errors.push(`arquivo "${file.name}"`); }
     }
-
     if(errors.length) throw new Error('falhou: ' + errors.join(', '));
   }
 
@@ -877,12 +978,8 @@
     if(!title){
       title = [getField(el, 'peca'), getField(el, 'demandante')].filter(Boolean).join(' — ') || 'Novo briefing';
     }
-
     const params = new URLSearchParams({
-      key, token,
-      idList: listId,
-      name: title,
-      desc: buildDescriptionFor(blockData)
+      key, token, idList: listId, name: title, desc: buildDescriptionFor(blockData)
     });
     const dataSalvar = getField(el, 'dataSalvar');
     if(dataSalvar) params.set('due', new Date(dataSalvar).toISOString());
@@ -917,6 +1014,8 @@
       showStatus('Escolha uma lista de destino primeiro.', false);
       return;
     }
+    const boardName = $('selBoard').selectedOptions[0] ? $('selBoard').selectedOptions[0].textContent : '';
+    const listName = $('selList').selectedOptions[0] ? $('selList').selectedOptions[0].textContent : '';
 
     btnCreate.disabled = true;
     btnCreate.textContent = 'Criando...';
@@ -928,16 +1027,13 @@
 
     const successCount = results.filter(r => r.ok).length;
     const lines = results.map(r => {
-      if(r.ok){
-        return `✅ <a href="${r.url}" target="_blank">${r.title}</a>` + (r.warning ? ` (atenção: ${r.warning})` : '');
-      }
+      if(r.ok) return `✅ <a href="${r.url}" target="_blank">${r.title}</a>` + (r.warning ? ` (atenção: ${r.warning})` : '');
       return `❌ ${r.title}: ${r.error}`;
     });
-
     showStatus(`${successCount}/${results.length} card(s) criado(s):<br>${lines.join('<br>')}`, successCount === results.length);
 
     const successEntries = results.filter(r => r.ok).map(r => ({
-      title: r.title, url: r.url, date: new Date().toLocaleString('pt-BR')
+      title: r.title, url: r.url, board: `${boardName} · ${listName}`, date: new Date().toLocaleString('pt-BR')
     }));
     await addHistoryEntries(successEntries);
 
@@ -955,29 +1051,9 @@
   $('btnConnect').addEventListener('click', connect);
   btnCreate.addEventListener('click', createAllCards);
 
-  // ---------- tema claro/escuro ----------
-  const THEME_KEY = 'trello-briefing-theme';
-  const appRoot = document.querySelector('.briefing-app');
-
-  function applyTheme(dark){
-    appRoot.classList.toggle('dark', dark);
-    $('themeToggle').textContent = dark ? '☀️' : '🌙';
-  }
-  async function loadTheme(){
-    try{
-      const r = await window.storage.get(THEME_KEY, false);
-      applyTheme(r && r.value === 'dark');
-    }catch(e){ applyTheme(false); }
-  }
-  $('themeToggle').addEventListener('click', async () => {
-    const isDark = !appRoot.classList.contains('dark');
-    applyTheme(isDark);
-    try{ await window.storage.set(THEME_KEY, isDark ? 'dark' : 'light', false); }catch(e){}
-  });
-
   await loadTheme();
   await loadTemplate();
-  addBlock(); // primeiro card em branco
+  addBlock();
   loadSaved();
   loadProfiles();
   loadHistory();
