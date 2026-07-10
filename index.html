@@ -208,9 +208,42 @@
   }
   .briefing-app .history-item a{color:var(--accent-dark);font-weight:700;}
   .briefing-app .hist-date{color:var(--muted);font-size:11px;white-space:nowrap;flex-shrink:0;}
+
+  /* ---------- dark mode ---------- */
+  .briefing-app{position:relative;}
+  .briefing-app.dark{
+    --bg:#2b2f38;
+    --ink:#e4e7ec;
+    --muted:#9aa3b2;
+    --shadow-light:rgba(255,255,255,.06);
+    --shadow-dark:rgba(0,0,0,.55);
+    --accent:#8f87ff;
+    --accent-dark:#a79dff;
+    --teal:#3fc7b2;
+    --indigo:#a79dff;
+    --danger:#ff8a75;
+    --line:rgba(0,0,0,.4);
+  }
+  .briefing-app.dark .btn-primary{
+    background:linear-gradient(145deg, #8f87ff, #6c63ff);
+    box-shadow: 6px 6px 14px rgba(0,0,0,.5), -4px -4px 10px rgba(255,255,255,.05);
+  }
+  .briefing-app.dark .label-chip.selected{color:#1c1f26;}
+  .briefing-app .theme-toggle{
+    position:absolute;top:32px;right:20px;
+    width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--bg);font-size:17px;line-height:1;
+    box-shadow:4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    display:flex;align-items:center;justify-content:center;
+    transition:box-shadow .12s;
+  }
+  .briefing-app .theme-toggle:active{
+    box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+  }
 </style>
 
 <div class="briefing-app">
+  <button id="themeToggle" class="theme-toggle" title="Alternar tema claro/escuro" type="button">🌙</button>
   <div class="wrap">
     <div class="eyebrow">Gestão de projeto</div>
     <h1>Briefing → Trello</h1>
@@ -922,6 +955,27 @@
   $('btnConnect').addEventListener('click', connect);
   btnCreate.addEventListener('click', createAllCards);
 
+  // ---------- tema claro/escuro ----------
+  const THEME_KEY = 'trello-briefing-theme';
+  const appRoot = document.querySelector('.briefing-app');
+
+  function applyTheme(dark){
+    appRoot.classList.toggle('dark', dark);
+    $('themeToggle').textContent = dark ? '☀️' : '🌙';
+  }
+  async function loadTheme(){
+    try{
+      const r = await window.storage.get(THEME_KEY, false);
+      applyTheme(r && r.value === 'dark');
+    }catch(e){ applyTheme(false); }
+  }
+  $('themeToggle').addEventListener('click', async () => {
+    const isDark = !appRoot.classList.contains('dark');
+    applyTheme(isDark);
+    try{ await window.storage.set(THEME_KEY, isDark ? 'dark' : 'light', false); }catch(e){}
+  });
+
+  await loadTheme();
   await loadTemplate();
   addBlock(); // primeiro card em branco
   loadSaved();
